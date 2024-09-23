@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TODO App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        form {
+            margin: 20px 0;
+        }
+
+        input {
+            padding: 5px;
+            margin-right: 10px;
+        }
+
+        th,
+        td {
+            text-align: center;
+        }
+
+        td {
+            padding: 5px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>TODO App</h1>
+
+    <h3>Add Todo</h3>
+    <form action="/create" method="POST">
+        <input type="text" name="todoText" placeholder="Enter your todo" required />
+        <input type="submit" value="submit" />
+    </form>
+
+    <hr />
+
+    <h3>All Todos</h3>
+    <% if (todos && todos.length> 0) { %>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">No.</th>
+                    <th scope="col">Todos</th>
+                    <th scope="col" colspan="2">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% let count=1%>
+                    <% todos.forEach(todo=> { %>
+                        <tr>
+                            <td>
+                                <%=count++%>
+                            </td>
+                            <td>
+                                <%= todo.todo_message %>
+                            </td>
+                            <td>
+                                <form action="/markTodo/<%=todo.id%>" method="POST" style="display: inline">
+                                    <button type="submit">Mark As Done</button>
+                                </form>
+                                <form action="/destroy/<%= todo.id %>" method="POST" style="display: inline">
+                                    <button type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <% }) %>
+            </tbody>
+        </table>
+        <% } else { %>
+            <p>No todos yet. Add one above!</p>
+            <% } %>
+
+                <br>
+                <hr />
+
+                <h3>Mark As Done Todos</h3>
+                <% if (markTodos && markTodos.length> 0) {%>
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Todo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% let count=1%>
+                                <% markTodos.forEach(mark=>{%>
+                                    <tr>
+                                        <td>
+                                            <%=count++%>
+                                        </td>
+                                        <td>
+                                            <%=mark.todo_message%>
+                                        </td>
+                                    </tr>
+                                    <%})%>
+                        </tbody>
+                    </table>
+
+                    <%}else{%>
+                        <p>No Mark As Done Todos present</p>
+                        <%}%>
+</body>
+
+</html>
