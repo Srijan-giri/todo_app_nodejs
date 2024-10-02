@@ -5,7 +5,7 @@ const createUser = async (userData) => {
         console.log("User Data:", userData); // Log the incoming userData for debugging
 
         // Attempt to create the user
-        const user = await User.create(userData); 
+        const user = await User.create(userData);
 
         // Check if the user was successfully created
         if (!user) {

@@ -9,7 +9,7 @@ const { showSignUp,
     homeController, logOutController } = require('../controllers/userController.js');
 
 userRouter.get('/', showSignIn);
-userRouter.get('/showsignup', showSignUp);
+userRouter.get('/signup', showSignUp);
 
 
 userRouter.post('/signup', signUpController);

@@ -16,7 +16,7 @@ module.exports.createTodoController = async (req, res) => {
         console.log(todoData.todoText);
         const todo = await createTodo(todoData);
         // res.status(201).send(todo);
-        res.redirect('/todos/todoHome');
+        res.redirect('/todos/');
     } catch (err) {
         res.status(400).send(err.message);
     }
@@ -57,7 +57,7 @@ module.exports.updateTodoController = async (req, res) => {
 
         const updatedTodo = await updateTodo(req.params.id, req.body);
         // res.status(200).send(todo);
-        res.redirect('/todos/todoHome');
+        res.redirect('/todos/');
     } catch (err) {
         res.status(400).send(err.message);
     }
@@ -69,7 +69,7 @@ module.exports.deleteTodoController = async (req, res) => {
         const todoId = req.params.id;
         const tododelete = await deleteTodo(todoId);
         console.log("Deleed Todo: " + tododelete);
-        res.redirect('/todos/todoHome');
+        res.redirect('/todos/');
     } catch (err) {
         res.status(400).send(err.message);
     }
@@ -82,7 +82,7 @@ module.exports.markAsDoneController = async (req, res) => {
         const todoId = req.params.id;
         const markTodo = await markAsDone(todoId);
         console.log("Mark Todo: " + markTodo);
-        res.redirect('/todos/todoHome');
+        res.redirect('/todos/');
     }
     catch (err) {
         res.status(400).send(err.message);
@@ -93,6 +93,10 @@ module.exports.showTodo = async (req, res) => {
     res.render('index');
 }
 
+
+module.exports.aboutController = async (req, res) => {
+    res.render('about');
+}
 // module.exports.markAsDoneTodosController = async (req, res) => {
 //     try {
 //         const markTodos = await markAsDoneTodos();

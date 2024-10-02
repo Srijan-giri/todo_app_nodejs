@@ -56,7 +56,7 @@ const signInController = async (req, res) => {
         }
 
         req.session.user = user;
-        res.redirect('/todos/todoHome');
+        res.redirect('/todos/');
     }
     catch (err) {
         console.log(err)
@@ -67,7 +67,7 @@ const signInController = async (req, res) => {
 const homeController = async (req, res) => {
     try {
         if (!req.session.user) {
-            res.redirect('/login');
+            res.redirect('/');
             return res.json(501).json({ message: 'Unauthorized Access' });
         }
 
