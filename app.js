@@ -1,13 +1,28 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const router = require('./routes/todoRoutes')
+const todosRouter = require('./routes/todoRoutes')
+const userRouter = require('./routes/userRoute');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
 const app = express();
 
+app.use(session({
+    secret: 'mySecretKey',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+    }
+}));
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use('/', router);
+app.use(express.json()); // for JSON requests
+app.use(express.urlencoded({ extended: true })); // for form data
 app.set('view engine', 'ejs');
-app.use(express.json());
+app.use(bodyParser.json());
+app.use('/', userRouter);
+app.use('/todos', todosRouter);
+
+
 
 
 module.exports = app;

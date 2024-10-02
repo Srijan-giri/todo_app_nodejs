@@ -4,7 +4,8 @@ const createTodo = async (todoData) => {
     try {
         console.log(todoData);
         const todo = await TodoApp.create({
-            todo_message: todoData.todoText
+            todo_message: todoData.todoText,
+            user_id: todoData.user_id
         });
         console.log(todo);
         return todo;
@@ -13,9 +14,9 @@ const createTodo = async (todoData) => {
     }
 }
 
-const getTodos = async () => {
-    const todos = await TodoApp.findAll({ where: { is_marked: false } });
-    // console.log('Todos from DB:', todos); // Log the data from the DB
+const getTodos = async (userId) => {
+    console.log(`Fetching todos for user ${userId}`);
+    const todos = await TodoApp.findAll({ where: { is_marked: false, user_id: userId } });
     return todos;
 }
 
@@ -71,10 +72,10 @@ const markAsDone = async (todoId) => {
     }
 }
 
-const markAsDoneTodos = async () => {
+const markAsDoneTodos = async (userId) => {
     try {
-        const todos = await TodoApp.findAll({ where: { is_marked: true } });
-        console.log("Marked todos : " + todos);
+        console.log(`Fetching mark todos for user ${userId}`);
+        const todos = await TodoApp.findAll({ where: { is_marked: true, user_id: userId } });
         return todos;
     }
     catch (err) {

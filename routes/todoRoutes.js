@@ -1,13 +1,15 @@
 const express = require('express');
 const router = express.Router();
+const { isAuthenticated } = require('../middleware/authMiddleware');
+
 
 const todoController = require('../controllers/todoController');
 
-router.get('/', todoController.getTodosController);
-router.post('/create', todoController.createTodoController);
-router.post('/update/:id', todoController.updateTodoController);
-router.post('/destroy/:id', todoController.deleteTodoController);
-
-router.post('/markTodo/:id', todoController.markAsDoneController);
+// router.get('/todoHome', isAuthenticated, todoController.showTodo);
+router.get('/todoHome', isAuthenticated, todoController.getTodosController);
+router.post('/create', isAuthenticated, todoController.createTodoController);
+// router.post('/todos/update/:id', isAuthenticated, todoController.updateTodoController);
+router.post('/markTodo/:id', isAuthenticated, todoController.markAsDoneController);
+router.post('/destroy/:id', isAuthenticated, todoController.deleteTodoController);
 
 module.exports = router;
