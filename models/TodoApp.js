@@ -5,6 +5,9 @@ module.exports = (sequelize, DataTypes) => {
   class TodoApp extends Model {
     static associate(models) {
       // Define associations here if needed in the future
+      TodoApp.belongsTo(models.User, {
+        foreignKey: 'user_id'
+      });
     }
   }
 
@@ -23,6 +26,16 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: {
       allowNull: false,
       type: DataTypes.DATE
+    },
+    user_id:{
+      type:DataTypes.INTEGER,
+      allowNull:false,
+      references:{
+        model:'Users',
+        key:'id'
+      },
+      onUpdate:'CASCADE',
+      onDelete:'CASCADE'
     }
   }, {
     sequelize,
