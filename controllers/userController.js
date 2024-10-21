@@ -1,6 +1,7 @@
 const { createUser } = require('../services/userService');
 const { User } = require('../models');
 const bcrypt = require('bcrypt');
+const twoFAauthService = require('../services/2FAauthService');
 
 const showSignUp = async (req, res) => {
     res.render('signup');
@@ -56,13 +57,54 @@ const signInController = async (req, res) => {
         }
 
         req.session.user = user;
-        res.redirect('/todos/');
+        if (user) {
+            const code = twoFAauthService.generateCode();
+            req.session.twoFactorCode = code;
+            req.session.twoFactorCodeTimestamp = Date.now(); // Store the timestamp
+            await twoFAauthService.send2FACode(req.session.user.email, code)
+            return res.redirect('/verify-2fa');
+        }
+
+        res.send('Invalid');
     }
     catch (err) {
         console.log(err)
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+
+const verify2FAPage = async (req, res) => {
+    const email = req.session.user.email;
+    res.render('verify_2fa', { email });
+}
+
+
+
+const check2FA = async (req, res) => {
+    const { code } = req.body;
+    const oneMinute = 1 * 60 * 1000;
+    const currentTime = Date.now();
+
+    if (code === req.session.twoFactorCode && (currentTime - req.session.twoFactorCodeTimestamp) <= oneMinute) {
+        req.session.twoFactorCode = null;
+        req.session.twoFactorCodeTimestamp = null;
+        res.redirect('/todos/');
+    }
+    return res.status(401).render('verify_2fa', { error: 'Invalid 2FA code. Please try again.' });
+};
+
+const resendOtp = async (req, res) => {
+    const user = req.session.user;
+    if (user) {
+        const code = twoFAauthService.generateCode();
+        req.session.twoFactorCode = code;
+        req.session.twoFactorCodeTimestamp = Date.now(); // Store the timestamp
+        await twoFAauthService.send2FACode(req.session.user.email, code)
+        return res.redirect('/verify-2fa');
+    }
+
+}
+
 
 const homeController = async (req, res) => {
     try {
@@ -103,5 +145,5 @@ module.exports = {
     showSignIn,
     signUpController,
     signInController,
-    homeController, logOutController
+    homeController, logOutController, check2FA, verify2FAPage
 }

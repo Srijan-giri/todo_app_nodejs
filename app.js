@@ -23,6 +23,7 @@ app.use('/', userRouter);
 app.use('/todos', todosRouter);
 
 
-
+console.log(bodyParser.json());
+console.log(express.json());
 
 module.exports = app;
